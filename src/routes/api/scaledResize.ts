@@ -16,6 +16,13 @@ scaledResize.get('/image', async (req, res) => {
     const imagePath = `./src/assets/${filename}.jpg`;
     const thumbImagePath = `./src/thumb/${filename}_thumb_${width}_${height}.jpg`;
 
+
+     // Check if the original image exists
+     if (!fs.existsSync(imagePath)) {
+      console.log('Image not found:', imagePath);
+      return res.status(404).send('Image not found');
+    }
+    
     // Check if the resized image already exists in the thumb folder
     if (fs.existsSync(thumbImagePath)) {
       console.log('Serving from cache:', thumbImagePath);
