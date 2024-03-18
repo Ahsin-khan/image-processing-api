@@ -2,7 +2,7 @@ import express from 'express';
 import route from './routes/routeIndex';
 
 const app = express();
-const port = 5000;
+const port = 3000;
 
 app.use('/api', route);
 

@@ -1,6 +1,6 @@
 import express from 'express';
 import Jimp from 'jimp';
-import fs from 'fs';
+import simpleImageResize from '../../controller/simpleImageController';
 
 const simpleResize = express.Router();
 
@@ -13,25 +13,12 @@ simpleResize.get('/image', async (req, res) => {
       return res.status(400).send('Filename, width, and height are required');
     }
 
-    // Read the original image
-    const imagePath = `./src/assets/${filename}.jpg`;
+    const buffer = await simpleImageResize(
+      filename as string,
+      parseInt(width as string),
+      parseInt(height as string)
+    );
 
-    // Check if the original image exists
-    if (!fs.existsSync(imagePath)) {
-      console.log('Image not found:', imagePath);
-      return res.status(404).send('Image not found');
-    }
-
-
-    const image = await Jimp.read(imagePath);
-
-    // Resize the image
-    image.resize(parseInt(width as string), parseInt(height as string));
-
-    // Convert the image to buffer
-    const buffer = await image.getBufferAsync(Jimp.MIME_JPEG);
-
-    // Send the resized image as response
     res.set('Content-Type', Jimp.MIME_JPEG);
     res.send(buffer);
   } catch (error) {
